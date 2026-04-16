@@ -1,7 +1,3 @@
-/**
- * qb-ui NUI (integrated with tobiweb UI)
- */
-
 const VALID_PLACEMENTS = new Set([
     "top-left", "top-center", "top-right",
     "middle-left", "center", "middle-right",
@@ -107,7 +103,7 @@ async function showText(textData) {
     container.classList.add("is-visible");
     app.classList.remove("hidden");
     
-    await sleep(50); // slight buffer for DOM
+    await sleep(50);
     card.classList.add("show");
 }
 
@@ -155,7 +151,6 @@ window.addEventListener("message", (event) => {
     }
 });
 
-// Fetch config on load (even if not used, keeps compatibility)
 window.addEventListener("load", () => {
     fetchNui("getDrawTextConfig", {});
 });

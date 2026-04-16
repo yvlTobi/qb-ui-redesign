@@ -17,7 +17,6 @@ body {
   pointer-events: none;
 }
 
-/* Position Container from qb-ui */
 #drawtext-container {
     display: none;
     position: fixed;
@@ -64,7 +63,6 @@ body {
   min-width: 320px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 
-  /* Animation from qb-ui */
   transform: scale(0.9);
   opacity: 0;
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;

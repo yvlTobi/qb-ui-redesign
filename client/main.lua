@@ -1,6 +1,3 @@
--- Credits: nerd developer
--- websiet: nertd-developer.com
-
 local function hideText()
     SendNUIMessage({
         action = 'HIDE_TEXT',
@@ -53,7 +50,6 @@ RegisterNUICallback('getDrawTextConfig', function(_, cb)
     cb(Config.DrawText or {})
 end)
 
---- Backward compatible event names (older resources / server triggers)
 RegisterNetEvent('qb-core:client:DrawText', function(text, position)
     drawText(text, position)
 end)
@@ -70,7 +66,6 @@ RegisterNetEvent('qb-core:client:KeyPressed', function()
     keyPressed()
 end)
 
---- Preferred names for new code
 RegisterNetEvent('qb-ui:client:DrawText', function(text, position)
     drawText(text, position)
 end)

@@ -1,12 +1,3 @@
-/**
- * qb-ui DrawText NUI
- * Styling from Config.DrawText (qb-ui/config.lua) via getDrawTextConfig.
- * If message contains [E] → show E then accent bar; else show "!" then bar.
- *
- * Credits: nerd developer
- * websiet: nertd-developer.com
- */
-
 const fetchNui = async (evName, data) => {
     const resourceName =
         typeof GetParentResourceName === "function" ? GetParentResourceName() : "qb-ui";
@@ -90,7 +81,6 @@ function applyDrawTextConfig(cfg) {
 
 function stripTags(s) {
     const raw = String(s ?? "");
-    // Preserve line breaks from common HTML tags so we can render title/subtitle like the reference UI.
     const withBreaks = raw
         .replace(/<\s*br\s*\/?\s*>/gi, "\n")
         .replace(/<\/\s*(p|div|li|tr|h[1-6])\s*>/gi, "\n");
@@ -106,7 +96,6 @@ function normalizeWhitespace(s) {
 
 function splitTitleDetail(plainText) {
     const raw = String(plainText ?? "");
-    // If text came as multi-line (e.g. "Garage<br>ROCKFORD HILLS"), prefer that split.
     const lines = raw
         .split(/\r?\n/)
         .map((l) => normalizeWhitespace(l))
@@ -116,16 +105,12 @@ function splitTitleDetail(plainText) {
     const p = normalizeWhitespace(raw);
     if (!p) return { title: "", detail: "" };
 
-    // Common patterns: "Garage - Open", "Garage: Open".
-    // Keep it conservative so we don't split Arabic sentences incorrectly.
     const m = p.match(/^(.{2,48}?)\s*[-–—:]\s*(.{2,80})$/);
     if (m) return { title: m[1].trim(), detail: m[2].trim() };
     return { title: p, detail: "" };
 }
 
-/**
- * True when the line is an "press E" style hint (qb-garages etc. use "E - Garage").
- */
+
 function textHasEPrompt(plain) {
     const p = normalizeWhitespace(plain);
     if (!p) return false;
@@ -135,10 +120,6 @@ function textHasEPrompt(plain) {
     if (/^Press\s+E\b/i.test(p)) return true;
     return false;
 }
-
-/**
- * Remove [E] or leading "E - " from HTML string for the body column.
- */
 function stripEPrefixFromRaw(raw) {
     let s = String(raw ?? "");
     s = s.replace(/\[[\s]*E[\s]*\]\s*/gi, "");
@@ -147,7 +128,6 @@ function stripEPrefixFromRaw(raw) {
     s = s.replace(/^[\s\-–—:]+/, "").trim();
     return s;
 }
-
 function renderDrawTextBody(textEl, rawHtml) {
     const raw = String(rawHtml ?? "");
     const plain = stripTags(raw);
@@ -155,7 +135,6 @@ function renderDrawTextBody(textEl, rawHtml) {
 
     textEl.textContent = "";
 
-    // Premium layout: accent rail + key chip + stacked text (title + optional detail)
     const root = document.createElement("div");
     root.className = "qb-drawtext__root" + (hasE ? " qb-drawtext__root--e" : " qb-drawtext__root--info");
 
