@@ -1,13 +1,3 @@
---[[
-    Credits: nerd developer
-    websiet: nertd-developer.com
-
-    DrawText UI — edit placement & style here only (unless useExportPosition = true).
-    placement:
- top-left, top-center, top-right,
-      middle-left, center, middle-right,
-      bottom-left, bottom-center, bottom-right
---]]
 Config = {}
 
 Config.DrawText = {
