@@ -1,0 +1,157 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Rajdhani', sans-serif;
+  background: transparent;
+}
+
+body {
+  pointer-events: none;
+}
+
+/* Position Container from qb-ui */
+#drawtext-container {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    pointer-events: none;
+}
+
+#drawtext-container.is-visible {
+    display: flex;
+}
+
+#drawtext-container[data-placement="top-left"] { align-items: flex-start; justify-content: flex-start; padding: 3vh 0 0 2.5vw; }
+#drawtext-container[data-placement="top-center"] { align-items: flex-start; justify-content: center; padding-top: 3vh; }
+#drawtext-container[data-placement="top-right"] { align-items: flex-start; justify-content: flex-end; padding: 3vh 2.5vw 0 0; }
+#drawtext-container[data-placement="middle-left"] { align-items: center; justify-content: flex-start; padding-left: 2.5vw; }
+#drawtext-container[data-placement="center"] { align-items: center; justify-content: center; }
+#drawtext-container[data-placement="middle-right"] { align-items: center; justify-content: flex-end; padding-right: 2.5vw; }
+#drawtext-container[data-placement="bottom-left"] { align-items: flex-end; justify-content: flex-start; padding: 0 0 8vh 2.5vw; }
+#drawtext-container[data-placement="bottom-center"] { align-items: flex-end; justify-content: center; padding-bottom: 8vh; }
+#drawtext-container[data-placement="bottom-right"] { align-items: flex-end; justify-content: flex-end; padding: 0 2.5vw 8vh 0; }
+
+#app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.garage-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 26px 16px 16px;
+  background: rgba(10, 10, 10, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  user-select: none;
+  min-width: 320px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  /* Animation from qb-ui */
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+}
+
+.garage-btn.show {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.garage-btn.pressed {
+  filter: brightness(1.3);
+  transform: scale(0.98);
+}
+
+.garage-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+  pointer-events: none;
+}
+
+.watermark {
+  position: absolute;
+  right: -10px;
+  bottom: -16px;
+  font-size: 108px;
+  color: #8d1111;
+  opacity: 0.12;
+  transform: rotate(45deg);
+  pointer-events: none;
+  line-height: 1;
+  -webkit-mask-image: radial-gradient(ellipse 85% 85% at 80% 80%, black 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 85% 85% at 80% 80%, black 20%, transparent 75%);
+}
+
+.key-cap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  background: rgba(20, 5, 5, 0.9);
+  border: 1px solid rgba(255, 60, 60, 0.15);
+  border-radius: 12px;
+}
+
+.key-cap span {
+  font-weight: 700;
+  font-size: 28px;
+  color: #ff3b3b;
+  line-height: 1;
+}
+
+.divider {
+  width: 1px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
+}
+
+.btn-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.btn-label {
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.btn-sub {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: rgba(255, 75, 75, 0.78);
+  text-transform: uppercase;
+  line-height: 1;
+}

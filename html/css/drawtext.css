@@ -1,0 +1,279 @@
+/*
+  Credits: nerd developer
+  websiet: nertd-developer.com
+*/
+
+/* qb-ui DrawText — layout + theme (Config.DrawText in qb-ui/config.lua) */
+
+#drawtext-container {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    pointer-events: none;
+    font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+#drawtext-container.is-visible {
+    display: flex;
+}
+
+#drawtext-container {
+    /* Shared vars (Config.DrawText via JS) */
+    --dt-bg: rgba(14, 16, 24, 0.92);
+    --dt-bg-active: rgba(212, 5, 74, 0.94);
+    --dt-text: #f0f2f8;
+    --dt-border: rgba(255, 255, 255, 0.14);
+    --dt-accent: #d4054a;
+    --dt-font-size: clamp(13px, 1.45vh, 17px);
+    --dt-pad: 14px 22px;
+    --dt-radius: 22px;
+    --dt-max-w: min(520px, 92vw);
+    --dt-shadow: 0 18px 60px rgba(0, 0, 0, 0.62);
+    --dt-anim: 320ms;
+    --dt-anim-fast: 180ms;
+    --dt-inset-vh: 3vh;
+    --dt-inset-vw: 2.5vw;
+    --dt-bottom-vh: 8vh;
+    --dt-off-x: 0vw;
+    --dt-off-y: 0vh;
+}
+
+#drawtext-container[data-placement="top-left"] {
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: var(--dt-inset-vh, 3vh) 0 0 var(--dt-inset-vw, 2.5vw);
+}
+
+#drawtext-container[data-placement="top-center"] {
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: var(--dt-inset-vh, 3vh);
+}
+
+#drawtext-container[data-placement="top-right"] {
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: var(--dt-inset-vh, 3vh) var(--dt-inset-vw, 2.5vw) 0 0;
+}
+
+#drawtext-container[data-placement="middle-left"] {
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: var(--dt-inset-vw, 2.5vw);
+}
+
+#drawtext-container[data-placement="center"] {
+    align-items: center;
+    justify-content: center;
+}
+
+#drawtext-container[data-placement="middle-right"] {
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: var(--dt-inset-vw, 2.5vw);
+}
+
+#drawtext-container[data-placement="bottom-left"] {
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 0 0 var(--dt-bottom-vh, 8vh) var(--dt-inset-vw, 2.5vw);
+}
+
+#drawtext-container[data-placement="bottom-center"] {
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: var(--dt-bottom-vh, 8vh);
+}
+
+#drawtext-container[data-placement="bottom-right"] {
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 0 var(--dt-inset-vw, 2.5vw) var(--dt-bottom-vh, 8vh) 0;
+}
+
+#text.qb-drawtext {
+    position: relative;
+    display: block;
+    max-width: var(--dt-max-w, min(520px, 92vw));
+    padding: 16px 18px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+    background:
+        radial-gradient(120% 160% at 18% 0%, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.00) 52%),
+        radial-gradient(120% 180% at 100% 55%, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.00) 62%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.00) 35%),
+        rgba(14, 16, 24, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 22px;
+    box-shadow:
+        0 18px 60px rgba(0, 0, 0, 0.62),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.38),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.58);
+    transform: translate(var(--dt-off-x, 0vw), var(--dt-off-y, 0vh)) scale(0.97);
+    opacity: 0;
+    will-change: transform, opacity;
+    transition:
+        transform var(--dt-anim, 320ms) cubic-bezier(0.22, 1, 0.36, 1),
+        opacity var(--dt-anim, 320ms) ease;
+}
+
+/* subtle outer hairline */
+#text.qb-drawtext::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: 23px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04) 45%, rgba(255, 255, 255, 0.10));
+    opacity: 0.26;
+    pointer-events: none;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    padding: 1px;
+    box-sizing: border-box;
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+}
+
+/* top highlight */
+#text.qb-drawtext::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 22px;
+    pointer-events: none;
+    opacity: 0.18;
+    background:
+        radial-gradient(120% 70% at 50% 0%, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.00) 68%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.00) 58%);
+}
+
+/* Exact layout like the screenshot */
+#text.qb-drawtext .qb-drawtext__root {
+    display: grid;
+    grid-template-columns: 12px 40px 1fr;
+    gap: 14px;
+    align-items: center;
+    padding: 6px 10px 6px 0;
+}
+
+#text.qb-drawtext .qb-drawtext__rail {
+    width: 12px;
+    height: 48px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ff3b7a, #d4054a 58%, #b5053c);
+    box-shadow:
+        0 16px 36px rgba(0, 0, 0, 0.35),
+        0 0 24px rgba(212, 5, 74, 0.22);
+}
+
+#text.qb-drawtext .qb-drawtext__chipwrap {
+    display: flex;
+    align-items: center;
+}
+
+/* KEY looks reddish in the reference, not a flat grey */
+#text.qb-drawtext .qb-drawtext__chip {
+    display: inline-grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 90, 140, 0.25);
+    background:
+        radial-gradient(120% 120% at 30% 20%, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.00) 55%),
+        linear-gradient(180deg, rgba(255, 59, 122, 0.16), rgba(255, 59, 122, 0.06) 55%),
+        rgba(0, 0, 0, 0.22);
+    color: rgba(255, 255, 255, 0.94);
+    font-family: inherit;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    box-shadow:
+        0 14px 34px rgba(0, 0, 0, 0.46),
+        inset 0 1px 0 rgba(255, 255, 255, 0.10),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 -12px 18px rgba(0, 0, 0, 0.28);
+    box-sizing: border-box;
+    user-select: none;
+}
+
+#text.qb-drawtext .qb-drawtext__chip--info {
+    border-color: rgba(255, 255, 255, 0.12);
+    background:
+        radial-gradient(120% 120% at 30% 20%, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.00) 55%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.00) 55%),
+        rgba(0, 0, 0, 0.22);
+}
+
+#text.qb-drawtext .qb-drawtext__content {
+    min-width: 0;
+    direction: auto;
+    unicode-bidi: plaintext;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+}
+
+#text.qb-drawtext .qb-drawtext__title {
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1.1;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+#text.qb-drawtext .qb-drawtext__detail {
+    font-weight: 600;
+    opacity: 0.55;
+    line-height: 1.1;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+#text.qb-drawtext.pressed .qb-drawtext__chip {
+    transform: translateY(1px);
+    filter: brightness(1.05);
+}
+
+#text.qb-drawtext.show {
+    transform: translate(var(--dt-off-x, 0vw), var(--dt-off-y, 0vh)) scale(1);
+    opacity: 1;
+}
+
+#text.qb-drawtext.hide {
+    transform: translate(var(--dt-off-x, 0vw), var(--dt-off-y, 0vh)) scale(0.97);
+    opacity: 0;
+}
+
+#text.qb-drawtext.pressed {
+    background: var(--dt-bg-active, rgba(212, 5, 74, 0.94));
+    border-color: rgba(255, 255, 255, 0.30);
+    box-shadow: 0 18px 70px rgba(0, 0, 0, 0.62);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #text.qb-drawtext {
+        transition-duration: 0.01ms;
+    }
+}
