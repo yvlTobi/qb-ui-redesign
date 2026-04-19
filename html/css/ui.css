@@ -53,15 +53,16 @@ body {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 18px;
-  padding: 16px 26px 16px 16px;
+  gap: 1.67vh;
+  padding: 1.48vh 2.41vh 1.48vh 1.48vh;
   background: rgba(10, 10, 10, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
+  border: max(1px, 0.09vh) solid rgba(255, 255, 255, 0.06);
+  border-radius: 1.48vh;
   overflow: hidden;
   user-select: none;
-  min-width: 320px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  min-width: 29.6vh;
+  max-width: 92vw;
+  box-shadow: 0 0.93vh 2.78vh rgba(0, 0, 0, 0.35);
 
   transform: scale(0.9);
   opacity: 0;
@@ -82,18 +83,18 @@ body {
   content: '';
   position: absolute;
   top: 0;
-  left: 18px;
-  right: 18px;
-  height: 1px;
+  left: 1.67vh;
+  right: 1.67vh;
+  height: max(1px, 0.09vh);
   background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
   pointer-events: none;
 }
 
 .watermark {
   position: absolute;
-  right: -10px;
-  bottom: -16px;
-  font-size: 108px;
+  right: -0.93vh;
+  bottom: -1.48vh;
+  font-size: 10vh;
   color: #8d1111;
   opacity: 0.12;
   transform: rotate(45deg);
@@ -107,24 +108,24 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 58px;
-  height: 58px;
+  width: 5.37vh;
+  height: 5.37vh;
   flex-shrink: 0;
   background: rgba(20, 5, 5, 0.9);
-  border: 1px solid rgba(255, 60, 60, 0.15);
-  border-radius: 12px;
+  border: max(1px, 0.09vh) solid rgba(255, 60, 60, 0.15);
+  border-radius: 1.11vh;
 }
 
 .key-cap span {
   font-weight: 700;
-  font-size: 28px;
+  font-size: 2.59vh;
   color: #ff3b3b;
   line-height: 1;
 }
 
 .divider {
-  width: 1px;
-  height: 38px;
+  width: max(1px, 0.09vh);
+  height: 3.52vh;
   background: rgba(255, 255, 255, 0.05);
   flex-shrink: 0;
 }
@@ -132,12 +133,12 @@ body {
 .btn-text {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 0.28vh;
 }
 
 .btn-label {
   font-weight: 500;
-  font-size: 20px;
+  font-size: 1.85vh;
   letter-spacing: 0.22em;
   color: rgba(255, 255, 255, 0.9);
   text-transform: uppercase;
@@ -147,7 +148,7 @@ body {
 
 .btn-sub {
   font-weight: 600;
-  font-size: 11px;
+  font-size: 1.02vh;
   letter-spacing: 0.22em;
   color: rgba(255, 75, 75, 0.78);
   text-transform: uppercase;

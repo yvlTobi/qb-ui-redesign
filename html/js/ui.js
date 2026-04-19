@@ -79,6 +79,24 @@ function splitTitleSubtitle(plainText) {
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+let uiEpoch = 0;
+
+function animateCardIn(card, epoch) {
+    card.classList.remove("show");
+    void card.offsetWidth;
+    requestAnimationFrame(() => {
+        if (epoch !== uiEpoch) return;
+        card.classList.add("show");
+    });
+}
+
+function textDataKey(d) {
+    if (!d) return "";
+    return [String(d.text ?? ""), String(d.position ?? ""), String(d.icon ?? "")].join("\0");
+}
+
+let lastRenderedKey = "";
+
 function updateContent(textData) {
     const plain = stripTags(textData.text);
     const key = extractKeyPrompt(plain);
@@ -89,30 +107,63 @@ function updateContent(textData) {
     document.getElementById("mainText").textContent = title || "";
     document.getElementById("subText").textContent = subtitle || "Press to interact";
     
+    // Dynamic icon: accepts a Font Awesome icon name (e.g. "car", "warehouse", "trash")
+    const iconEl = document.getElementById("watermarkIcon");
+    if (iconEl) {
+        const iconName = (textData.icon && String(textData.icon).trim()) ? String(textData.icon).trim() : "warehouse";
+        iconEl.className = `fa-solid fa-${iconName} watermark`;
+    }
+    
     const container = document.getElementById("drawtext-container");
     container.dataset.placement = normalizePlacement(textData.position);
+    lastRenderedKey = textDataKey(textData);
 }
 
-async function showText(textData) {
+function showText(textData) {
     const app = document.getElementById("app");
     const container = document.getElementById("drawtext-container");
     const card = document.querySelector(".garage-btn");
+    const key = textDataKey(textData);
 
+    if (container.classList.contains("is-visible") && card.classList.contains("show") && key === lastRenderedKey) {
+        return;
+    }
+
+    const epoch = ++uiEpoch;
     updateContent(textData);
 
     container.classList.add("is-visible");
     app.classList.remove("hidden");
-    
-    await sleep(50);
-    card.classList.add("show");
+    animateCardIn(card, epoch);
 }
 
 async function changeText(textData) {
+    const app = document.getElementById("app");
+    const container = document.getElementById("drawtext-container");
     const card = document.querySelector(".garage-btn");
+    const key = textDataKey(textData);
+
+    if (key === lastRenderedKey && card.classList.contains("show")) {
+        return;
+    }
+
+    // Stuck state: content matches but prompt was left without .show (cancelled animation / race).
+    if (key === lastRenderedKey && container.classList.contains("is-visible")) {
+        const fixEpoch = ++uiEpoch;
+        updateContent(textData);
+        app.classList.remove("hidden");
+        animateCardIn(card, fixEpoch);
+        return;
+    }
+
+    const epoch = ++uiEpoch;
     card.classList.remove("show");
     await sleep(300);
+    if (epoch !== uiEpoch) return;
     updateContent(textData);
-    card.classList.add("show");
+    container.classList.add("is-visible");
+    app.classList.remove("hidden");
+    animateCardIn(card, epoch);
 }
 
 async function hideText() {
@@ -120,13 +171,16 @@ async function hideText() {
     const container = document.getElementById("drawtext-container");
     const card = document.querySelector(".garage-btn");
 
-    if (!card.classList.contains("show")) return;
+    if (!container.classList.contains("is-visible")) return;
 
+    const epoch = ++uiEpoch;
     card.classList.remove("show");
     await sleep(300);
-    
+    if (epoch !== uiEpoch) return;
+
     app.classList.add("hidden");
     container.classList.remove("is-visible");
+    lastRenderedKey = "";
 }
 
 function keyPressed() {
