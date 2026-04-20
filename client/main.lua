@@ -16,22 +16,24 @@ local function resolvePosition(fromExport)
     return 'bottom-center'
 end
 
-local function drawText(text, position)
+local function drawText(text, position, icon)
     SendNUIMessage({
         action = 'DRAW_TEXT',
         data = {
             text = text,
             position = resolvePosition(position),
+            icon = icon or '',
         }
     })
 end
 
-local function changeText(text, position)
+local function changeText(text, position, icon)
     SendNUIMessage({
         action = 'CHANGE_TEXT',
         data = {
             text = text,
             position = resolvePosition(position),
+            icon = icon or '',
         }
     })
 end
@@ -50,12 +52,12 @@ RegisterNUICallback('getDrawTextConfig', function(_, cb)
     cb(Config.DrawText or {})
 end)
 
-RegisterNetEvent('qb-core:client:DrawText', function(text, position)
-    drawText(text, position)
+RegisterNetEvent('qb-core:client:DrawText', function(text, position, icon)
+    drawText(text, position, icon)
 end)
 
-RegisterNetEvent('qb-core:client:ChangeText', function(text, position)
-    changeText(text, position)
+RegisterNetEvent('qb-core:client:ChangeText', function(text, position, icon)
+    changeText(text, position, icon)
 end)
 
 RegisterNetEvent('qb-core:client:HideText', function()
@@ -66,12 +68,12 @@ RegisterNetEvent('qb-core:client:KeyPressed', function()
     keyPressed()
 end)
 
-RegisterNetEvent('qb-ui:client:DrawText', function(text, position)
-    drawText(text, position)
+RegisterNetEvent('qb-ui:client:DrawText', function(text, position, icon)
+    drawText(text, position, icon)
 end)
 
-RegisterNetEvent('qb-ui:client:ChangeText', function(text, position)
-    changeText(text, position)
+RegisterNetEvent('qb-ui:client:ChangeText', function(text, position, icon)
+    changeText(text, position, icon)
 end)
 
 RegisterNetEvent('qb-ui:client:HideText', function()

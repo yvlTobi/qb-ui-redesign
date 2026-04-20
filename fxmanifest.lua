@@ -1,3 +1,5 @@
+server_script '@ElectronAC/src/include/server.lua'
+client_script '@ElectronAC/src/include/client.lua'
 
 fx_version 'cerulean'
 game 'gta5'
@@ -25,3 +27,11 @@ files {
     'html/css/drawtext.css',
     'html/js/drawtext.js',
 }
+
+exports {
+    'DrawText',
+    'ChangeText',
+    'HideText',
+    'KeyPressed'
+}
+

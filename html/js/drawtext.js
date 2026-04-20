@@ -115,7 +115,6 @@ function textHasEPrompt(plain) {
     const p = normalizeWhitespace(plain);
     if (!p) return false;
     if (/\[[\s]*E[\s]*\]/i.test(p)) return true;
-    // "E - Label" / "E: Label" / "E – Label" at the start (not "Energy - …")
     if (/^E\s*[-–—:]\s*\S/i.test(p)) return true;
     if (/^Press\s+E\b/i.test(p)) return true;
     return false;

@@ -77,7 +77,30 @@ function splitTitleSubtitle(plainText) {
     return { title: p, subtitle: "" };
 }
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+let pendingHideTimer = null;
+const HIDE_DEBOUNCE_MS = 120;
+const HIDE_TRANSITION_MS = 320;
+let lastRenderedKey = "";
+
+function textDataKey(d) {
+    if (!d) return "";
+    return [String(d.text ?? ""), String(d.position ?? ""), String(d.icon ?? "")].join("\0");
+}
+
+function cancelPendingHide() {
+    if (pendingHideTimer !== null) {
+        clearTimeout(pendingHideTimer);
+        pendingHideTimer = null;
+    }
+}
+
+function animateCardIn(card) {
+    card.classList.remove("show");
+    void card.offsetWidth;
+    requestAnimationFrame(() => {
+        card.classList.add("show");
+    });
+}
 
 function updateContent(textData) {
     const plain = stripTags(textData.text);
@@ -88,45 +111,115 @@ function updateContent(textData) {
     document.getElementById("keyText").textContent = key || "E";
     document.getElementById("mainText").textContent = title || "";
     document.getElementById("subText").textContent = subtitle || "Press to interact";
-    
+
+    const iconEl = document.getElementById("watermarkIcon");
+    if (iconEl) {
+        const iconName = (textData.icon && String(textData.icon).trim()) ? String(textData.icon).trim() : "warehouse";
+        iconEl.className = `fa-solid fa-${iconName} watermark`;
+    }
+
     const container = document.getElementById("drawtext-container");
     container.dataset.placement = normalizePlacement(textData.position);
+    lastRenderedKey = textDataKey(textData);
 }
 
-async function showText(textData) {
+function showText(textData) {
     const app = document.getElementById("app");
     const container = document.getElementById("drawtext-container");
     const card = document.querySelector(".garage-btn");
+    const key = textDataKey(textData);
+
+    const wasHidePending = pendingHideTimer !== null;
+    cancelPendingHide();
+
+    if (!wasHidePending && container.classList.contains("is-visible") && card.classList.contains("show") && key === lastRenderedKey) {
+        return;
+    }
+
+    if (wasHidePending && key === lastRenderedKey) {
+        container.classList.add("is-visible");
+        app.classList.remove("hidden");
+        card.classList.add("show");
+        return;
+    }
 
     updateContent(textData);
-
     container.classList.add("is-visible");
     app.classList.remove("hidden");
-    
-    await sleep(50);
-    card.classList.add("show");
+    animateCardIn(card);
 }
 
-async function changeText(textData) {
+function changeText(textData) {
+    const app = document.getElementById("app");
+    const container = document.getElementById("drawtext-container");
     const card = document.querySelector(".garage-btn");
+    const key = textDataKey(textData);
+
+    const wasHidePending = pendingHideTimer !== null;
+    cancelPendingHide();
+
+    if (!wasHidePending && key === lastRenderedKey && card.classList.contains("show")) {
+        return;
+    }
+
+    if (wasHidePending && key === lastRenderedKey) {
+        container.classList.add("is-visible");
+        app.classList.remove("hidden");
+        card.classList.add("show");
+        return;
+    }
+
     card.classList.remove("show");
-    await sleep(300);
-    updateContent(textData);
-    card.classList.add("show");
+
+    const outDuration = wasHidePending ? 0 : 300;
+
+    const doSwap = () => {
+        updateContent(textData);
+        container.classList.add("is-visible");
+        app.classList.remove("hidden");
+        animateCardIn(card);
+    };
+
+    if (outDuration <= 0) {
+        doSwap();
+    } else {
+        let swapped = false;
+        const onEnd = () => {
+            if (swapped) return;
+            swapped = true;
+            doSwap();
+        };
+        card.addEventListener("transitionend", onEnd, { once: true });
+        setTimeout(onEnd, outDuration + 20);
+    }
 }
 
-async function hideText() {
+function hideText() {
     const app = document.getElementById("app");
     const container = document.getElementById("drawtext-container");
     const card = document.querySelector(".garage-btn");
 
-    if (!card.classList.contains("show")) return;
+    if (!container.classList.contains("is-visible")) return;
 
-    card.classList.remove("show");
-    await sleep(300);
-    
-    app.classList.add("hidden");
-    container.classList.remove("is-visible");
+    if (pendingHideTimer !== null) return;
+
+    pendingHideTimer = setTimeout(() => {
+        pendingHideTimer = null;
+
+        card.classList.remove("show");
+
+        let hidden = false;
+        const finish = () => {
+            if (hidden) return;
+            hidden = true;
+            app.classList.add("hidden");
+            container.classList.remove("is-visible");
+            lastRenderedKey = "";
+        };
+
+        card.addEventListener("transitionend", finish, { once: true });
+        setTimeout(finish, HIDE_TRANSITION_MS + 20);
+    }, HIDE_DEBOUNCE_MS);
 }
 
 function keyPressed() {
